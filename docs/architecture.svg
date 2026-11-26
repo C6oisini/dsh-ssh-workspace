@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" font-family="Inter, -apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="960" height="560" fill="#0b0d12"/>
+  <text x="40" y="46" fill="#f4f5f7" font-size="22" font-weight="600">dsh-ssh-workspace 架构</text>
+  <text x="40" y="72" fill="#8b93a7" font-size="13">本地空目录当锚 + 远端直读直写，远端零安装</text>
+
+  <rect x="40" y="96" width="880" height="252" rx="10" fill="#12151d" stroke="#262b36"/>
+  <text x="62" y="126" fill="#8b93a7" font-size="12" letter-spacing="1">YOUR MAC · DSH DESKTOP</text>
+
+  <rect x="62" y="146" width="252" height="176" rx="8" fill="#171b24" stroke="#2c3340"/>
+  <text x="82" y="174" fill="#f4f5f7" font-size="15" font-weight="600">Client（Web GUI）</text>
+  <text x="82" y="200" fill="#c3c9d4" font-size="12.5">SSH 远程工作区面板</text>
+  <text x="82" y="222" fill="#c3c9d4" font-size="12.5">主机列表 · 目录浏览 · 打开工作区</text>
+  <text x="82" y="244" fill="#c3c9d4" font-size="12.5">ssh_bash 输出卡 · diff 卡</text>
+  <text x="82" y="278" fill="#6f788c" font-size="12">fetch('/api/dsh-ssh/*')</text>
+
+  <rect x="354" y="146" width="272" height="176" rx="8" fill="#171b24" stroke="#2c3340"/>
+  <text x="374" y="174" fill="#f4f5f7" font-size="15" font-weight="600">Host 插件</text>
+  <text x="374" y="200" fill="#c3c9d4" font-size="12.5">8 个 ssh_* 工具</text>
+  <text x="374" y="222" fill="#c3c9d4" font-size="12.5">/dsh-ssh HTTP 路由</text>
+  <text x="374" y="244" fill="#c3c9d4" font-size="12.5">提示词注入 + 工具可见性收口</text>
+  <text x="374" y="278" fill="#6f788c" font-size="12">ctx.tools.restrict / systemPrompt.section</text>
+
+  <rect x="666" y="146" width="232" height="176" rx="8" fill="#171b24" stroke="#2c3340"/>
+  <text x="686" y="174" fill="#f4f5f7" font-size="15" font-weight="600">本地占位目录</text>
+  <text x="686" y="200" fill="#c3c9d4" font-size="12.5">~/.dsh/ssh-workspace/</text>
+  <text x="686" y="222" fill="#c3c9d4" font-size="12.5">workspaces/&lt;alias&gt;/&lt;name&gt;-hash/</text>
+  <text x="686" y="250" fill="#f0a06a" font-size="12.5" font-family="ui-monospace, Menlo, monospace">.dsh-ssh.json</text>
+  <text x="686" y="278" fill="#6f788c" font-size="12">会话 cwd 锚点，无项目文件</text>
+
+  <line x1="314" y1="234" x2="354" y2="234" stroke="#f2735b" stroke-width="1.6"/>
+  <polygon points="354,230 362,234 354,238" fill="#f2735b"/>
+  <line x1="626" y1="234" x2="666" y2="234" stroke="#7c8598" stroke-width="1.4" stroke-dasharray="4 3"/>
+
+  <rect x="40" y="384" width="880" height="140" rx="10" fill="#12151d" stroke="#262b36"/>
+  <text x="62" y="414" fill="#8b93a7" font-size="12" letter-spacing="1">REMOTE LINUX · 3090</text>
+  <rect x="62" y="432" width="380" height="72" rx="8" fill="#171b24" stroke="#2c3340"/>
+  <text x="82" y="460" fill="#f4f5f7" font-size="14" font-weight="600">真实项目目录</text>
+  <text x="82" y="484" fill="#c3c9d4" font-size="12.5" font-family="ui-monospace, Menlo, monospace">/srv/app</text>
+  <rect x="470" y="432" width="428" height="72" rx="8" fill="#171b24" stroke="#2c3340"/>
+  <text x="490" y="460" fill="#f4f5f7" font-size="14" font-weight="600">远端依赖</text>
+  <text x="490" y="484" fill="#c3c9d4" font-size="12.5">bash · base64 · GNU stat · 可选 rg，全部零安装</text>
+
+  <text x="470" y="360" fill="#8b93a7" font-size="12">ssh -T · BatchMode · ControlMaster 复用</text>
+  <line x1="490" y1="330" x2="490" y2="384" stroke="#f2735b" stroke-width="1.6"/>
+  <polygon points="486,384 490,393 494,384" fill="#f2735b"/>
+  <line x1="500" y1="384" x2="500" y2="330" stroke="#7c8598" stroke-width="1.2" stroke-dasharray="4 3"/>
+</svg>

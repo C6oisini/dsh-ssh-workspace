@@ -1,0 +1,27 @@
+# Enable this workflow by copying it to .github/workflows/test.yml.
+# The push token used to create this repo lacked the `workflow` scope, so CI
+# lives here until `gh auth refresh -s workflow` has been granted.
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [20, 22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Syntax check
+        run: node --check index.js client.js lib/*.js
+      - name: Unit tests
+        run: node --test test/

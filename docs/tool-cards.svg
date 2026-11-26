@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="430" viewBox="0 0 960 430" font-family="Inter, -apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="960" height="430" fill="#0e1015"/>
+
+  <rect x="40" y="32" width="880" height="160" rx="10" fill="#12151d" stroke="#2c3340"/>
+  <rect x="60" y="52" width="52" height="22" rx="5" fill="#1b1f28" stroke="#3a4150"/>
+  <text x="72" y="68" fill="#c3c9d4" font-size="11" font-family="ui-monospace, Menlo, monospace">3090</text>
+  <text x="126" y="69" fill="#f4f5f7" font-size="12.5" font-family="ui-monospace, Menlo, monospace">$ pwd &amp;&amp; hostname &amp;&amp; whoami &amp;&amp; date</text>
+  <text x="820" y="69" fill="#4ade80" font-size="12" font-family="ui-monospace, Menlo, monospace">exit 0</text>
+  <text x="60" y="98" fill="#6f788c" font-size="11.5" font-family="ui-monospace, Menlo, monospace">/srv/app · 30 ms</text>
+  <text x="60" y="126" fill="#c3c9d4" font-size="12" font-family="ui-monospace, Menlo, monospace">/srv/app</text>
+  <text x="60" y="146" fill="#c3c9d4" font-size="12" font-family="ui-monospace, Menlo, monospace">user-SYS-7049GP</text>
+  <text x="60" y="166" fill="#c3c9d4" font-size="12" font-family="ui-monospace, Menlo, monospace">dev · exit 0</text>
+
+  <rect x="40" y="212" width="880" height="180" rx="10" fill="#12151d" stroke="#2c3340"/>
+  <rect x="60" y="232" width="132" height="22" rx="5" fill="#1b1f28" stroke="#3a4150"/>
+  <text x="72" y="248" fill="#c3c9d4" font-size="11" font-family="ui-monospace, Menlo, monospace">ssh_write</text>
+  <text x="206" y="248" fill="#4ade80" font-size="12" font-family="ui-monospace, Menlo, monospace">+3</text>
+  <text x="242" y="248" fill="#f87171" font-size="12" font-family="ui-monospace, Menlo, monospace">-1</text>
+  <text x="60" y="276" fill="#6f788c" font-size="11.5" font-family="ui-monospace, Menlo, monospace">--- a/srv/app/scripts/run.sh</text>
+  <text x="60" y="296" fill="#6f788c" font-size="11.5" font-family="ui-monospace, Menlo, monospace">+++ b/srv/app/scripts/run.sh</text>
+  <text x="60" y="318" fill="#8b93a7" font-size="12" font-family="ui-monospace, Menlo, monospace">@@ -1,3 +1,5 @@</text>
+  <text x="60" y="338" fill="#8b93a7" font-size="12" font-family="ui-monospace, Menlo, monospace"> #!/bin/sh</text>
+  <text x="60" y="358" fill="#f87171" font-size="12" font-family="ui-monospace, Menlo, monospace">-echo old</text>
+  <text x="60" y="378" fill="#4ade80" font-size="12" font-family="ui-monospace, Menlo, monospace">+echo new</text>
+
+  <text x="40" y="420" fill="#6f788c" font-size="11">示意图：ssh_bash 输出卡（exit code / cwd / stdout）与 ssh_write diff 卡</text>
+</svg>

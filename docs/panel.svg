@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" font-family="Inter, -apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="960" height="600" fill="#0e1015"/>
+  <rect x="0" y="0" width="224" height="600" fill="#14161c"/>
+  <text x="20" y="40" fill="#f4f5f7" font-size="17" font-weight="600">Claude</text>
+  <g fill="#8b93a7" font-size="13">
+    <text x="20" y="84">+  新会话</text>
+    <text x="20" y="116">搜索</text>
+    <text x="20" y="148">插件</text>
+    <text x="20" y="180">自动化任务</text>
+    <text x="20" y="212">上下文洞察</text>
+    <rect x="10" y="228" width="204" height="32" rx="6" fill="#1b1f28"/>
+    <text x="20" y="249" fill="#f4f5f7">SSH 远程工作区</text>
+    <text x="20" y="292">更多</text>
+  </g>
+  <text x="20" y="336" fill="#6f788c" font-size="11" letter-spacing="1">工作区</text>
+  <g fill="#8b93a7" font-size="12.5">
+    <text x="20" y="362">MyCode</text>
+    <text x="20" y="388">github-profile-kit</text>
+    <text x="20" y="414">SEU_CV</text>
+  </g>
+
+  <text x="264" y="56" fill="#f4f5f7" font-size="22" font-weight="600">SSH 远程工作区</text>
+  <text x="264" y="82" fill="#8b93a7" font-size="13">用服务器的文件夹作为工作区：选择主机和目录，新建会话后 Agent 直接在远端读写和执行命令。</text>
+
+  <rect x="264" y="108" width="656" height="448" rx="10" fill="#12151d" stroke="#262b36"/>
+  <text x="288" y="142" fill="#c3c9d4" font-size="13">主机 · 3090</text>
+  <rect x="738" y="124" width="88" height="28" rx="6" fill="#1b1f28" stroke="#2c3340"/>
+  <text x="760" y="143" fill="#c3c9d4" font-size="12">返回主机</text>
+
+  <rect x="288" y="170" width="46" height="30" rx="6" fill="#1b1f28" stroke="#2c3340"/>
+  <text x="303" y="190" fill="#c3c9d4" font-size="12">上级</text>
+  <rect x="344" y="170" width="384" height="30" rx="6" fill="#0f1218" stroke="#2c3340"/>
+  <text x="358" y="190" fill="#c3c9d4" font-size="12.5" font-family="ui-monospace, Menlo, monospace">/srv/app</text>
+  <rect x="740" y="170" width="56" height="30" rx="6" fill="#1b1f28" stroke="#2c3340"/>
+  <text x="752" y="190" fill="#c3c9d4" font-size="12">刷新</text>
+  <rect x="806" y="170" width="92" height="30" rx="6" fill="#f2735b"/>
+  <text x="818" y="190" fill="#1a0f0b" font-size="12" font-weight="600">打开为工作区</text>
+
+  <g font-size="12.5" fill="#c3c9d4">
+    <rect x="288" y="218" width="610" height="34" fill="#12151d"/>
+    <text x="300" y="240">dir  assets</text>
+    <text x="852" y="240" fill="#6f788c">12 项</text>
+    <rect x="288" y="252" width="610" height="34" fill="#151922"/>
+    <text x="300" y="274">dir  compare_methods</text>
+    <text x="852" y="274" fill="#6f788c">4 项</text>
+    <rect x="288" y="286" width="610" height="34" fill="#12151d"/>
+    <text x="300" y="308">dir  configs</text>
+    <text x="852" y="308" fill="#6f788c">3 项</text>
+    <rect x="288" y="320" width="610" height="34" fill="#151922"/>
+    <text x="300" y="342">dir  experiments</text>
+    <text x="852" y="342" fill="#6f788c">7 项</text>
+    <rect x="288" y="354" width="610" height="34" fill="#12151d"/>
+    <text x="300" y="376">file  AGENTS.md</text>
+    <text x="852" y="376" fill="#6f788c">2.1 KB</text>
+    <rect x="288" y="388" width="610" height="34" fill="#151922"/>
+    <text x="300" y="410">file  README.md</text>
+    <text x="852" y="410" fill="#6f788c">1.3 KB</text>
+  </g>
+
+  <text x="264" y="586" fill="#6f788c" font-size="11">示意图：SSH 远程工作区面板（主机 → 远端目录 → 打开为工作区）</text>
+</svg>

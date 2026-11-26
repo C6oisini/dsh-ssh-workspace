@@ -1,0 +1,70 @@
+{
+  "name": "dsh-ssh-workspace",
+  "version": "0.1.0",
+  "description": "Use a folder on an SSH host as a DSH workspace: browse remote directories, open one as a native workspace, and let the agent read, edit and run commands on the server through the system ssh client.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib",
+    "cordis.patch.yml",
+    "locale",
+    "icon.svg",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node --check index.js && node --check client.js && node --check lib/diff.js && node --check lib/ssh.js && node --check lib/binding.js && node --check lib/tools.js && node --check lib/routes.js && node --check lib/http.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "ssh",
+    "remote-development",
+    "workspace",
+    "plugin"
+  ],
+  "author": "C6oisini",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/C6oisini/dsh-ssh-workspace.git"
+  },
+  "homepage": "https://github.com/C6oisini/dsh-ssh-workspace#readme",
+  "bugs": {
+    "url": "https://github.com/C6oisini/dsh-ssh-workspace/issues"
+  },
+  "dsh": {
+    "engines": {
+      "dsh": ">=0.2.0-0 <0.3.0"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-api-workspace-controller",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "SSH remote workspaces",
+    "description": "Use a folder on an SSH host as a DSH workspace: pick a host in the left-rail panel, browse remote directories, open one as a workspace, and from then on the agent reads, edits, searches and runs commands on the server through the system ssh client, with diffs and real exit codes in the conversation."
+  }
+}
