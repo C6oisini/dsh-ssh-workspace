@@ -5,6 +5,7 @@
 > Open a folder on an SSH host as a native DSH workspace. Reads and writes hit the server directly — no mirror, no sync, nothing installed on the remote.
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![test](https://github.com/C6oisini/dsh-ssh-workspace/actions/workflows/test.yml/badge.svg)](https://github.com/C6oisini/dsh-ssh-workspace/actions/workflows/test.yml)
 [![dsh](https://img.shields.io/badge/dsh-0.2.x-4b5563.svg)](#要求)
 
 ![架构示意](docs/architecture.svg)
@@ -133,7 +134,7 @@ npm test          # node --test test/
 
 测试不连接 SSH：diff 算法、工具 JSON Schema、绑定目录、`~/.ssh/config` 解析都用临时目录与假配置。
 
-CI 配置在 [ci/github-actions-test.yml](ci/github-actions-test.yml)（Ubuntu / macOS × Node 20 / 22 / 24）。复制到 `.github/workflows/test.yml` 即可启用；创建仓库时用的 token 没有 `workflow` scope，所以先放在 `ci/`。
+CI 在 GitHub Actions 上跑同样的检查：Ubuntu / macOS × Node 20 / 22 / 24。
 
 ## License
 

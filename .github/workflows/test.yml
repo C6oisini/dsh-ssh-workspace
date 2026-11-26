@@ -1,6 +1,3 @@
-# Enable this workflow by copying it to .github/workflows/test.yml.
-# The push token used to create this repo lacked the `workflow` scope, so CI
-# lives here until `gh auth refresh -s workflow` has been granted.
 name: test
 
 on:
