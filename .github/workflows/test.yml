@@ -21,4 +21,4 @@ jobs:
       - name: Syntax check
         run: node --check index.js client.js lib/*.js
       - name: Unit tests
-        run: node --test test/
+        run: node --test test/*.test.js

@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "check": "node --check index.js && node --check client.js && node --check lib/diff.js && node --check lib/ssh.js && node --check lib/binding.js && node --check lib/tools.js && node --check lib/routes.js && node --check lib/http.js",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.js"
   },
   "engines": {
     "node": ">=20"
