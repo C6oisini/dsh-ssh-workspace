@@ -152,6 +152,11 @@ window.__ModuleLoader__.load({
         fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
       },
       toolCmd: { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+      toolCmdFull: {
+        margin: 0, maxHeight: 160, overflow: 'auto', whiteSpace: 'pre-wrap',
+        wordBreak: 'break-all', lineHeight: 1.45, fontSize: 12,
+        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+      },
     }
 
     function apiPath(path) {
@@ -500,6 +505,7 @@ window.__ModuleLoader__.load({
             ),
         ]),
         open ? h('div', { style: styles.toolBody },
+          args.path ? h('div', { style: Object.assign({}, styles.mute, { wordBreak: 'break-all' }) }, args.path) : null,
           isError
             ? h('pre', { style: styles.toolPre }, resultError(props) || resultText(props))
             : (lines.length
@@ -556,6 +562,7 @@ window.__ModuleLoader__.load({
           h('span', { style: { flexShrink: 0, color: failed ? red : token('state-success-primary', '#15803d') } }, status),
         ]),
         open ? h('div', { style: styles.toolBody },
+          h('pre', { style: styles.toolCmdFull }, `$ ${command}`),
           facts ? h('div', { style: styles.mute }, facts) : null,
           output
             ? h('pre', { style: Object.assign({}, styles.toolPre, { color: failed ? red : undefined }) }, output)
