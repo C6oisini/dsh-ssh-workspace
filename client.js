@@ -136,6 +136,22 @@ window.__ModuleLoader__.load({
         border: `1px solid ${token('border-l1', '#e5e7eb')}`,
         color: token('label-secondary', '#6b7280'),
       },
+      toolCard: {
+        border: `1px solid ${token('border-l1', '#e5e7eb')}`,
+        borderRadius: 8,
+        overflow: 'hidden',
+      },
+      toolBody: {
+        display: 'grid', gap: 6,
+        padding: '8px 10px',
+        borderTop: `1px solid ${token('border-l1', '#e5e7eb')}`,
+      },
+      toolPre: {
+        margin: 0, padding: 0, maxHeight: 320, overflow: 'auto',
+        whiteSpace: 'pre-wrap', lineHeight: 1.45, fontSize: 12,
+        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+      },
+      toolCmd: { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
     }
 
     function apiPath(path) {
@@ -414,63 +430,137 @@ window.__ModuleLoader__.load({
       return lines.slice(0, 240)
     }
 
+    function CardChevron(props) {
+      return h('span', {
+        style: {
+          width: 12, display: 'inline-flex', justifyContent: 'center',
+          color: token('label-secondary', '#6b7280'), fontSize: 10,
+        },
+        'aria-hidden': true,
+      }, props.open ? '▼' : '▶')
+    }
+
+    function cardHeader(open, onToggle, children, disabled) {
+      return h('button', {
+        type: 'button',
+        onClick: disabled ? undefined : onToggle,
+        disabled: Boolean(disabled),
+        'aria-expanded': Boolean(open),
+        title: disabled ? 'running' : open ? 'collapse' : 'expand',
+        style: {
+          all: 'unset', boxSizing: 'border-box', display: 'flex', gap: 8,
+          alignItems: 'center', width: '100%', padding: '7px 10px',
+          cursor: disabled ? 'default' : 'pointer',
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          fontSize: 12, color: token('label-primary', '#111827'),
+        },
+      }, h(CardChevron, { open: Boolean(open) }), children)
+    }
+
+    function toolArgs(props) {
+      try {
+        const raw = props.block && (props.block.argsRaw || (props.block.call && props.block.call.argsRaw))
+        return raw ? JSON.parse(raw) : {}
+      } catch {
+        return {}
+      }
+    }
+
     function DiffCard(props) {
+      const [open, setOpen] = React.useState(false)
       const meta = resultMeta(props)
-      if (props.phase !== 'result') return h('div', { style: styles.mute }, props.toolName)
-      if (props.block && props.block.isError) {
-        return h('div', { style: { border: `1px solid ${token('state-error-primary', '#b91c1c')}`, borderRadius: 8, padding: '8px 10px', fontSize: 12 } },
-          h('div', { style: { color: token('state-error-primary', '#b91c1c'), fontWeight: 600 } }, `${props.toolName}: failed`),
-          h('pre', { style: { margin: '6px 0 0', whiteSpace: 'pre-wrap', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' } }, resultError(props) || resultText(props)),
+      const args = toolArgs(props)
+
+      if (props.phase !== 'result') {
+        return h('div', { style: styles.toolCard },
+          cardHeader(false, null, [
+            h('span', { style: styles.badge }, props.toolName),
+            h('span', { style: styles.toolCmd }, args.path || ''),
+            h('span', { style: styles.mute }, 'running…'),
+          ], true),
         )
       }
+
+      const isError = Boolean(props.block && props.block.isError)
+      const red = token('state-error-primary', '#b91c1c')
       const lines = diffLines(meta.diff)
-      return h('div', { style: { border: `1px solid ${token('border-l1', '#e5e7eb')}`, borderRadius: 8, overflow: 'hidden' } },
-        h('div', { style: { display: 'flex', gap: 8, alignItems: 'center', padding: '6px 10px', fontSize: 12, borderBottom: `1px solid ${token('border-l1', '#e5e7eb')}` } },
+      return h('div', {
+        style: Object.assign({}, styles.toolCard, {
+          border: `1px solid ${isError ? red : token('border-l1', '#e5e7eb')}`,
+        }),
+      },
+        cardHeader(open, () => setOpen((value) => !value), [
           h('span', { style: styles.badge }, props.toolName),
-          h('span', { style: { color: token('state-success-primary', '#15803d') } }, `+${meta.added || 0}`),
-          h('span', { style: { color: token('state-error-primary', '#b91c1c') } }, `-${meta.removed || 0}`),
-        ),
-        h('pre', { style: { margin: 0, padding: '8px 10px', overflow: 'auto', maxHeight: 260, fontSize: 12, lineHeight: 1.45, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' } },
-          lines.map((line, index) => h('div', {
-            key: index,
-            style: {
-              whiteSpace: 'pre-wrap',
-              color: line.startsWith('+') && !line.startsWith('+++') ? token('state-success-primary', '#15803d')
-                : line.startsWith('-') && !line.startsWith('---') ? token('state-error-primary', '#b91c1c')
-                  : token('label-secondary', '#6b7280'),
-              background: line.startsWith('+') && !line.startsWith('+++') ? token('file-diff-added-bg', 'transparent')
-                : line.startsWith('-') && !line.startsWith('---') ? token('file-diff-deleted-bg', 'transparent')
-                  : 'transparent',
-            },
-          }, line || ' ')),
-        ),
+          h('span', { style: styles.toolCmd }, args.path || ''),
+          isError
+            ? h('span', { style: { color: red } }, 'failed')
+            : h('span', { style: { display: 'flex', gap: 6 } },
+              h('span', { style: { color: token('state-success-primary', '#15803d') } }, `+${meta.added || 0}`),
+              h('span', { style: { color: red } }, `-${meta.removed || 0}`),
+            ),
+        ]),
+        open ? h('div', { style: styles.toolBody },
+          isError
+            ? h('pre', { style: styles.toolPre }, resultError(props) || resultText(props))
+            : (lines.length
+              ? h('pre', { style: styles.toolPre },
+                lines.map((line, index) => h('div', {
+                  key: index,
+                  style: {
+                    whiteSpace: 'pre-wrap',
+                    color: line.startsWith('+') && !line.startsWith('+++') ? token('state-success-primary', '#15803d')
+                      : line.startsWith('-') && !line.startsWith('---') ? red
+                        : token('label-secondary', '#6b7280'),
+                    background: line.startsWith('+') && !line.startsWith('+++') ? token('file-diff-added-bg', 'transparent')
+                      : line.startsWith('-') && !line.startsWith('---') ? token('file-diff-deleted-bg', 'transparent')
+                        : 'transparent',
+                  },
+                }, line || ' ')))
+              : h('div', { style: styles.mute }, 'no changes')),
+        ) : null,
       )
     }
 
     function ExecCard(props) {
+      const [open, setOpen] = React.useState(false)
       const meta = resultMeta(props)
-      let args = {}
-      try {
-        const raw = props.block && (props.block.argsRaw || (props.block.call && props.block.call.argsRaw))
-        args = raw ? JSON.parse(raw) : {}
-      } catch {
-        args = {}
+      const args = toolArgs(props)
+      const command = args.command || ''
+
+      if (props.phase !== 'result') {
+        return h('div', { style: styles.toolCard },
+          cardHeader(false, null, [
+            h('span', { style: styles.badge }, 'ssh'),
+            h('span', { style: styles.toolCmd }, `$ ${command}`),
+            h('span', { style: styles.mute }, 'running…'),
+          ], true),
+        )
       }
-      if (props.phase !== 'result') return h('div', { style: styles.mute }, `$ ${args.command || props.toolName}`)
-      const output = resultText(props)
+
+      const output = resultText(props).replace(/\n+$/, '')
       const isError = Boolean(props.block && props.block.isError)
       const hasCode = meta.code !== undefined && meta.code !== null
       const failed = isError || (hasCode && Number(meta.code) !== 0)
+      const red = token('state-error-primary', '#b91c1c')
+      const status = isError ? 'failed' : hasCode ? `exit ${meta.code}` : meta.timedOut ? 'timeout' : 'done'
       const facts = [meta.cwd, hasCode ? `${meta.durationMs || 0} ms` : ''].filter(Boolean).join(' · ')
-      return h('div', { style: { border: `1px solid ${failed ? token('state-error-primary', '#b91c1c') : token('border-l1', '#e5e7eb')}`, borderRadius: 8, padding: '8px 10px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 12 } },
-        h('div', { style: { display: 'flex', gap: 8, alignItems: 'center' } },
-          h('span', { style: styles.badge }, meta.host ? `${meta.host}` : 'ssh'),
-          h('span', { style: { flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, `$ ${args.command || ''}`),
-          h('span', { style: { color: failed ? token('state-error-primary', '#b91c1c') : token('state-success-primary', '#15803d') } },
-            isError ? 'failed' : hasCode ? `exit ${meta.code}` : meta.timedOut ? 'timeout' : 'done'),
-        ),
-        facts ? h('div', { style: Object.assign({}, styles.mute, { marginTop: 4 }) }, facts) : null,
-        output ? h('pre', { style: { margin: '6px 0 0', padding: 0, maxHeight: 240, overflow: 'auto', whiteSpace: 'pre-wrap', lineHeight: 1.45, color: failed ? token('state-error-primary', '#b91c1c') : undefined } }, output.replace(/\n+$/, '')) : null,
+
+      return h('div', {
+        style: Object.assign({}, styles.toolCard, {
+          border: `1px solid ${failed ? red : token('border-l1', '#e5e7eb')}`,
+        }),
+      },
+        cardHeader(open, () => setOpen((value) => !value), [
+          h('span', { style: styles.badge }, meta.host || 'ssh'),
+          h('span', { style: styles.toolCmd }, `$ ${command}`),
+          h('span', { style: { flexShrink: 0, color: failed ? red : token('state-success-primary', '#15803d') } }, status),
+        ]),
+        open ? h('div', { style: styles.toolBody },
+          facts ? h('div', { style: styles.mute }, facts) : null,
+          output
+            ? h('pre', { style: Object.assign({}, styles.toolPre, { color: failed ? red : undefined }) }, output)
+            : h('div', { style: styles.mute }, isError ? (resultError(props) || 'no output') : 'no output'),
+        ) : null,
       )
     }
 
