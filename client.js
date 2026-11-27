@@ -16,6 +16,9 @@ window.__ModuleLoader__.load({
 
     const NS = 'sshWorkspace'
     const PANEL_ID = 'ssh-workspace'
+    // Workspaces created here point at sentinel folders; the globe keeps them
+    // distinguishable from local workspaces in the sidebar.
+    const REMOTE_MARK = '🌐 '
 
     const L = {
       zh: {
@@ -324,6 +327,7 @@ window.__ModuleLoader__.load({
           const [hostsResult, workspacesResult] = await Promise.all([api.hosts(), api.workspaces()])
           setHosts(hostsResult.hosts || [])
           setWorkspaces(workspacesResult.workspaces || [])
+          if (props.markRemote) void props.markRemote(workspacesResult.workspaces || [])
           setError('')
         } catch (cause) {
           setError(String((cause && cause.message) || cause))
@@ -587,17 +591,100 @@ window.__ModuleLoader__.load({
           return () => { dispose?.() }
         }, 'dsh-ssh-workspace.locale')
 
+        const workspaceItems = () => {
+          const workspaces = ctx.get('workspaces')
+          const source = workspaces && workspaces.list
+          try {
+            if (source && typeof source.getSnapshot === 'function') {
+              const snapshot = source.getSnapshot()
+              return (snapshot && snapshot.items) || []
+            }
+            if (typeof source === 'function') return source() || []
+          } catch {}
+          return []
+        }
+
+        const markRemoteWorkspace = async (view) => {
+          if (!view || typeof view.title !== 'string' || view.title.startsWith(REMOTE_MARK)) return view
+          const workspaces = ctx.get('workspaces')
+          const id = view.workspaceId || view.id
+          if (!workspaces || typeof workspaces.rename !== 'function' || !id) return view
+          try {
+            return await workspaces.rename(id, REMOTE_MARK + view.title)
+          } catch {
+            return view
+          }
+        }
+
+        const pendingMarks = new Set()
+
+        // Older workspaces were registered before the marker existed. Tag the
+        // ones whose title still equals the sentinel folder's name; a custom
+        // title is left alone.
+        const markRemoteWorkspaces = (bindings) => {
+          const paths = new Set((bindings || []).map((entry) => entry && entry.localPath).filter(Boolean))
+          if (paths.size === 0) return
+          for (const view of workspaceItems()) {
+            if (!view || !paths.has(view.path)) continue
+            const base = String(view.path).split('/').pop()
+            if (view.title !== base) continue
+            const id = view.workspaceId || view.id
+            if (!id || pendingMarks.has(id)) continue
+            pendingMarks.add(id)
+            void markRemoteWorkspace(view).finally(() => pendingMarks.delete(id))
+          }
+        }
+
         const openWorkspace = async (localPath) => {
           const workspaces = ctx.get('workspaces')
           const ui = ctx.get('uiWorkspace')
           const created = await workspaces.create({ path: localPath })
-          const id = (created && (created.id || (created.workspace && created.workspace.id))) || localPath
+          const view = created && created.workspace ? created.workspace : created
+          const marked = await markRemoteWorkspace(view)
+          const id = (marked && (marked.workspaceId || marked.id))
+            || (view && (view.workspaceId || view.id))
+            || localPath
           if (ui && typeof ui.startSession === 'function') await ui.startSession(id)
           const layout = ctx.get('layout')
           // null = back to the current conversation (the panel we came from is
           // this plugin's own main panel).
           if (layout && typeof layout.selectPanel === 'function') layout.selectPanel(null)
         }
+
+        // Tag leftovers as soon as both sides are known: bindings from this
+        // plugin, titles from the client workspace store.
+        ctx.effect(() => {
+          const workspaces = ctx.get('workspaces')
+          const source = workspaces && workspaces.list
+          let cancelled = false
+          let bindings = []
+          let loading = false
+          let unsubscribe = () => {}
+          const load = async () => {
+            if (loading || cancelled) return
+            loading = true
+            try {
+              const result = await api.workspaces()
+              if (cancelled) return
+              bindings = (result && result.workspaces) || []
+              markRemoteWorkspaces(bindings)
+            } catch {
+              // The connection may not be up yet; a later snapshot retries.
+            } finally {
+              loading = false
+            }
+          }
+          const tryMark = () => {
+            if (cancelled) return
+            if (bindings.length === 0) void load()
+            else markRemoteWorkspaces(bindings)
+          }
+          if (source && typeof source.subscribe === 'function') {
+            try { unsubscribe = source.subscribe(tryMark) || (() => {}) } catch {}
+          }
+          void load()
+          return () => { cancelled = true; unsubscribe() }
+        }, 'dsh-ssh-workspace.mark-remote')
 
         ctx.slots.inject('sidebar.panellist', () => ctx.slots.register({
           name: 'sidebar.panellist',
@@ -611,7 +698,7 @@ window.__ModuleLoader__.load({
           name: 'main',
           key: PANEL_ID,
           locale: NS,
-          inject: () => ({ t: tr, openWorkspace }),
+          inject: () => ({ t: tr, openWorkspace, markRemote: markRemoteWorkspaces }),
         }, PanelPage))
 
         for (const toolName of ['ssh_write', 'ssh_edit']) {

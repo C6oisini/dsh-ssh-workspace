@@ -98,6 +98,8 @@ plugin_manager install_bundle /Users/<you>/MyCode/dsh-ssh-workspace
 
 `.dsh-ssh.json` 记录 `{ version, alias, remotePath, hostname, user, port }`。DSH 会话的 `cwd` 就是这个占位目录，插件从 `cwd` 向上找到绑定文件，反推远端主机与路径，所以 DSH 重启、会话恢复后绑定依然有效。
 
+插件建工作区时会把标题改成 `🌐 <目录名>`，侧栏里一眼能看出哪些是远程工作区；自己改过的标题不会被覆盖。
+
 - 占位目录里除 `.dsh-ssh.json` 外没有项目文件，远端文件不镜像。
 - 删除占位目录等于遗忘这个工作区。面板里的「移除」会做校验，只删 `~/.dsh/ssh-workspace/workspaces/` 之内的目录。
 - ControlMaster socket 放在 `~/.dsh/ssh-workspace/cm/`，`ControlPersist=300` 秒。
